@@ -5,28 +5,25 @@ import time
 
 running = False
 
-connecting - True
+try:
+    # host agent
+    listener = socket.socket()
+    listener.bind(('0.0.0.0', 8081))
+    listener.listen(1)
+    bridge_client = listener.accept()[0]
+    listener.close()
+    print("Bridge Client Connected.")
 
-while connecting:
-    try:
-        # host agent
-        listener = socket.socket()
-        listener.bind(('0.0.0.0', 8081))
-        listener.listen(1)
-        bridge_client = listener.accept()[0]
-        listener.close()
-        print("Bridge Client Connected.")
+    # guacd
+    listener = socket.socket()
+    listener.bind(('127.0.0.1', 8080))
+    listener.listen(1)
+    client = listener.accept()[0]
+    listener.close()
+    print("Client Connected")
 
-        # guacd
-        listener = socket.socket()
-        listener.bind(('127.0.0.1', 8080))
-        listener.listen(1)
-        client = listener.accept()[0]
-        listener.close()
-        print("Client Connected")
-
-        running = True
-    except: pass
+    running = True
+except: pass
 
 
 def forward(source, destination):
