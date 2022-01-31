@@ -2,28 +2,8 @@ import thread
 import socket
 import sys
 import time
-
-running = False
-
-try:
-    # host agent
-    listener = socket.socket()
-    listener.bind(('0.0.0.0', 8081))
-    listener.listen(1)
-    bridge_client = listener.accept()[0]
-    listener.close()
-    print("Bridge Client Connected.")
-
-    # guacd
-    listener = socket.socket()
-    listener.bind(('127.0.0.1', 8080))
-    listener.listen(1)
-    client = listener.accept()[0]
-    listener.close()
-    print("Client Connected")
-
-    running = True
-except: pass
+#https://github.com/vinodpandey/python-port-forward
+#https://gist.github.com/Motoma/1215469
 
 
 def forward(source, destination):
@@ -35,6 +15,32 @@ def forward(source, destination):
         else:
             source.shutdown(socket.SHUT_RD)
             destination.shutdown(socket.SHUT_WR)
+
+running = False
+
+try:
+    # host agent
+    print("Waiting for Host Agent to connect to 8081")
+    listener = socket.socket()
+    listener.bind(('0.0.0.0', 8081))
+    listener.listen(1)
+    bridge_client = listener.accept()[0]
+    listener.close()
+    print("Bridge Client Connected.")
+
+    # guacd
+    print("Waiting for Guacd to connect to 8080")
+    listener = socket.socket()
+    listener.bind(('127.0.0.1', 8080))
+    listener.listen(1)
+    client = listener.accept()[0]
+    listener.close()
+    print("Client Connected")
+
+    running = True
+except: pass
+
+
 
 while running:
     try:
