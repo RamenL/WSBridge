@@ -13,8 +13,12 @@ def forward(source, destination):
         if string:
             destination.sendall(string)
         else:
-            source.shutdown(socket.SHUT_RD)
-            destination.shutdown(socket.SHUT_WR)
+            print("attempt to close")
+            try: source.close()
+            except: pass
+            try: destination.close()
+            except: pass
+
 
 running = False
 
@@ -46,26 +50,6 @@ while running:
     try:
         thread.start_new_thread(forward, (bridge_client, client))
         thread.start_new_thread(forward, (client, bridge_client))
-        """
-        rlist = select.select([bridge_client, client], [], [])[0]
-
-        if bridge_client in rlist:
-            buf = bridge_client.recv(4096)
-            if len(buf) == 0:
-                print("Bridge Client Disconnected.")
-                running = False
-
-            client.send(buf)
-
-        if client in rlist:
-            buf = client.recv(4096)
-            if len(buf) == 0:
-                print("Client Disconnected.")
-                running = False
-
-            bridge_client.send(buf)
-        """
-
     except:
         pass
 
