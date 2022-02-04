@@ -18,6 +18,7 @@ def forward(source, destination):
             except: pass
             try: destination.close()
             except: pass
+            thread.exit()
 
 
 running = False
